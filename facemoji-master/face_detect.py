@@ -25,8 +25,8 @@ def _locate_faces(image):
         minNeighbors=15,
         minSize=(70, 70)
     )
-    if faces:
-        print('faces are there')
+    # if faces:
+    #     print('faces are there')
     return faces  # list of (x, y, w, h)
 
 if __name__ == "__main__":
