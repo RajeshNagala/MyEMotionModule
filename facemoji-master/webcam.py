@@ -7,6 +7,9 @@ from cv2 import WINDOW_NORMAL
 import cv2
 from face_detect import find_faces
 from image_commons import nparray_as_image, draw_with_alpha
+from picamera.array import PiRGBArray
+from picamera import PiCamera
+import time
 
 
 def _load_emoticons(emotions):
@@ -16,6 +19,39 @@ def _load_emoticons(emotions):
     :return: Array of emotions graphics.
     """
     return [nparray_as_image(cv2.imread('graphics/%s.png' % emotion, -1), mode=None) for emotion in emotions]
+
+def show_piCam(model, emoticons,window_size=None,window_name='PiCam', update_time=10):
+    print('showing pi cam')
+
+    cv2.namedWindow(window_name, WINDOW_NORMAL)
+    if window_size:
+        width, height = window_size
+        cv2.resizeWindow(window_name, width, height)
+
+    camera = PiCamera()
+    camera.framerate=32
+    camera.resolution = window_size
+    rawCapture = PiRGBArray(camera, size=(640, 480))
+    time.sleep(2)
+
+    # capture frames from the camera
+    for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
+        # grab the raw NumPy array representing the image, then initialize the timestamp
+        # and occupied/unoccupied text
+        image = frame.array
+
+        # show the frame
+        cv2.imshow("Frame", image)
+        key = cv2.waitKey(1) & 0xFF
+
+        # clear the stream in preparation for the next frame
+        rawCapture.truncate(0)
+
+        # if the `q` key was pressed, break from the loop
+        if key == ord("q"):
+            break
+
+
 
 
 def show_webcam_and_run(model, emoticons, window_size=None, window_name='webcam', update_time=10):
@@ -70,5 +106,7 @@ if __name__ == '__main__':
     fisher_face.load('models/emotion_detection_model.xml')
 
     # use learnt model
-    window_name = 'WEBCAM (press ESC to exit)'
-    show_webcam_and_run(fisher_face, emoticons, window_size=(1600, 1200), window_name=window_name, update_time=8)
+    window_name = 'PiCam (press q to exit)'
+    # window_name = 'WEBCAM (press ESC to exit)'
+    # show_webcam_and_run(fisher_face, emoticons, window_size=(1600, 1200), window_name=window_name, update_time=8)
+    show_piCam(fisher_face, emoticons, window_size=(1600, 1200), window_name=window_name, update_time=8)
