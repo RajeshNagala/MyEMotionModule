@@ -47,6 +47,7 @@ def show_piCam(model, emoticons,window_size=None,window_name='PiCam', update_tim
                 prediction = prediction[0]
 
             image_to_draw = emoticons[prediction]
+            image.setflags(write=1)
             draw_with_alpha(image, image_to_draw, (x, y, w, h))
 
         cv2.imshow("Frame", image)
