@@ -49,19 +49,19 @@ def show_piCam(model, emoticons,window_size=None,window_name='PiCam', update_tim
             image_to_draw = emoticons[prediction]
             draw_with_alpha(image, image_to_draw, (x, y, w, h))
 
-    cv2.imshow("Frame", image)
-    # read_value, webcam_image = vc.read()
-    image = frame.array
-    # key = cv2.waitKey(update_time)
-    # show the frame
-    key = cv2.waitKey(1) & 0xFF
+        cv2.imshow("Frame", image)
+        # read_value, webcam_image = vc.read()
+        image = frame.array
+        # key = cv2.waitKey(update_time)
+        # show the frame
+        key = cv2.waitKey(1) & 0xFF
 
-    # clear the stream in preparation for the next frame
-    rawCapture.truncate(0)
+        # clear the stream in preparation for the next frame
+        rawCapture.truncate(0)
 
-    # if the `q` key was pressed, break from the loop
-    if key == ord("q"):
-        break
+        # if the `q` key was pressed, break from the loop
+        if key == ord("q"):
+            break
 
 
 
