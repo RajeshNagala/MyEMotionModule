@@ -23,11 +23,6 @@ def _load_emoticons(emotions):
 def show_piCam(model, emoticons,window_size=None,window_name='PiCam', update_time=10):
     print('showing pi cam')
 
-    cv2.namedWindow(window_name, WINDOW_NORMAL)
-    if window_size:
-        width, height = window_size
-        cv2.resizeWindow(window_name, width, height)
-
     camera = PiCamera()
     camera.framerate=32
     camera.resolution = (640, 480)
