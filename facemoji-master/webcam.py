@@ -27,15 +27,17 @@ def show_piCam(model, emoticons,window_size=None,window_name='PiCam', update_tim
     printInfo('showing pi cam')
 
     camera = PiCamera()
-    camera.framerate=32
     camera.resolution = (640, 480)
+    camera.framerate=32
     rawCapture = PiRGBArray(camera, size=(640, 480))
-    time.sleep(2)
+    #allow the camera to warm up
+    time.sleep(0.1)
 
     # capture frames from the camera
     for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
         # grab the raw NumPy array representing the image, then initialize the timestamp
         # and occupied/unoccupied text
+        print('in frame for loop')
         image = frame
         printInfo('frame captured')
         for normalized_face, (x, y, w, h) in find_faces(image):
