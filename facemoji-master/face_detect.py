@@ -6,6 +6,7 @@ import cv2
 faceCascade = cv2.CascadeClassifier('models/haarcascade_frontalface_default.xml')
 
 def find_faces(image):
+    print('in the find faces')
     faces_coordinates = _locate_faces(image)
     cutted_faces = [image[y:y + h, x:x + w] for (x, y, w, h) in faces_coordinates]
     normalized_faces = [_normalize_face(face) for face in cutted_faces]
@@ -24,7 +25,7 @@ def _locate_faces(image):
         minNeighbors=15,
         minSize=(70, 70)
     )
-
+    print(faces)
     return faces  # list of (x, y, w, h)
 
 if __name__ == "__main__":
