@@ -39,7 +39,7 @@ def show_piCam(model, emoticons,window_size=None,window_name='PiCam', update_tim
         # and occupied/unoccupied text
         print('in frame for loop')
         image = frame.array
-        printInfo('frame captured')
+        # printInfo('frame captured')
         for normalized_face, (x, y, w, h) in find_faces(image):
             printInfo("face found")
             prediction = model.predict(normalized_face)  # do prediction
