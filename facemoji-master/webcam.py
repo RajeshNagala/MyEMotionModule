@@ -38,7 +38,7 @@ def show_piCam(model, emoticons,window_size=None,window_name='PiCam', update_tim
         # grab the raw NumPy array representing the image, then initialize the timestamp
         # and occupied/unoccupied text
         print('in frame for loop')
-        image = frame
+        image = frame.array
         printInfo('frame captured')
         for normalized_face, (x, y, w, h) in find_faces(image):
             printInfo("face found")
@@ -51,7 +51,7 @@ def show_piCam(model, emoticons,window_size=None,window_name='PiCam', update_tim
 
         cv2.imshow("Frame", image)
         # read_value, webcam_image = vc.read()
-        image = frame
+        image = frame.array
         key = cv2.waitKey(update_time)
         # show the frame
         key = cv2.waitKey(1) & 0xFF
