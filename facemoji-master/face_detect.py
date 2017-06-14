@@ -30,7 +30,7 @@ def _locate_faces(image):
     return faces  # list of (x, y, w, h)
 
 if __name__ == "__main__":
-    image = cv2.imread('test_data/test.jpg')
+    image = cv2.imread('facemoji_screenshot.png')
     cv2.imshow("face", image)
 
     for index, face in enumerate(find_faces(image)):
