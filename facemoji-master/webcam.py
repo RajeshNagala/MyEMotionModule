@@ -30,7 +30,7 @@ def show_piCam(model, emoticons,window_size=None,window_name='PiCam', update_tim
 
     camera = PiCamera()
     camera.framerate=32
-    camera.resolution = window_size
+    camera.resolution = (640, 480)
     rawCapture = PiRGBArray(camera, size=(640, 480))
     time.sleep(2)
 
