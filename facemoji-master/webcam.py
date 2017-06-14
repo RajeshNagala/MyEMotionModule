@@ -20,8 +20,11 @@ def _load_emoticons(emotions):
     """
     return [nparray_as_image(cv2.imread('graphics/%s.png' % emotion, -1), mode=None) for emotion in emotions]
 
+def printInfo(val):
+    print(val)
+
 def show_piCam(model, emoticons,window_size=None,window_name='PiCam', update_time=10):
-    print('showing pi cam')
+    printInfo('showing pi cam')
 
     camera = PiCamera()
     camera.framerate=32
@@ -34,9 +37,20 @@ def show_piCam(model, emoticons,window_size=None,window_name='PiCam', update_tim
         # grab the raw NumPy array representing the image, then initialize the timestamp
         # and occupied/unoccupied text
         image = frame.array
+        printInfo('frame captured')
+        for normalized_face, (x, y, w, h) in find_faces(image):
+            prediction = model.predict(normalized_face)  # do prediction
+            if cv2.__version__ != '3.1.0':
+                prediction = prediction[0]
 
+            image_to_draw = emoticons[prediction]
+            draw_with_alpha(image, image_to_draw, (x, y, w, h))
+
+        cv2.imshow(window_name, image)
+        # read_value, webcam_image = vc.read()
+        image = frame.array
+        key = cv2.waitKey(update_time)
         # show the frame
-        cv2.imshow("Frame", image)
         key = cv2.waitKey(1) & 0xFF
 
         # clear the stream in preparation for the next frame
