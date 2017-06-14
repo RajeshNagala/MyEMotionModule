@@ -36,9 +36,10 @@ def show_piCam(model, emoticons,window_size=None,window_name='PiCam', update_tim
     for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
         # grab the raw NumPy array representing the image, then initialize the timestamp
         # and occupied/unoccupied text
-        image = frame.array
+        image = frame
         printInfo('frame captured')
         for normalized_face, (x, y, w, h) in find_faces(image):
+            printInfo("face found")
             prediction = model.predict(normalized_face)  # do prediction
             if cv2.__version__ != '3.1.0':
                 prediction = prediction[0]
@@ -46,9 +47,9 @@ def show_piCam(model, emoticons,window_size=None,window_name='PiCam', update_tim
             image_to_draw = emoticons[prediction]
             draw_with_alpha(image, image_to_draw, (x, y, w, h))
 
-        cv2.imshow(window_name, image)
+        cv2.imshow("Frame", image)
         # read_value, webcam_image = vc.read()
-        image = frame.array
+        image = frame
         key = cv2.waitKey(update_time)
         # show the frame
         key = cv2.waitKey(1) & 0xFF
