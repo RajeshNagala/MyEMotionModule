@@ -10,7 +10,7 @@ detector = dlib.get_frontal_face_detector()
 predictor = dlib.shape_predictor(p)
  
 # load the input image and convert it to grayscale
-image = cv2.imread("sachin1.jpg")
+image = cv2.imread("sachin_group.jpg")
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
  
 # detect faces in the grayscale image
