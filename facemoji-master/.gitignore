@@ -66,3 +66,7 @@ target/
 
 # Sets
 /data/
+
+#stan´s project file
+*.py~
+*.pyc
