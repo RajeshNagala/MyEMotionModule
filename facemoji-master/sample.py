@@ -49,6 +49,7 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
         #     cv2.rectangle(roi_color,(nx,ny),(nx+nw,ny+nh),(0,255,255),1)
 
     # show the frame
+
     cv2.imshow("Frame", image)
     key = cv2.waitKey(1) & 0xFF
 

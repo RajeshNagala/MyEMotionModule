@@ -1,11 +1,13 @@
 from imutils.video import VideoStream
 from imutils import face_utils
+import MyWebPiCam
 import argparse
 import datetime
 import imutils
 import time
 import dlib
 import cv2
+import threading
 
 ap = argparse.ArgumentParser()
 
@@ -22,13 +24,18 @@ detector = dlib.get_frontal_face_detector()
 predictor = dlib.shape_predictor(args["shape_predictor"])
 
 print "Camera is getting warming up, pls wait"
-vs = VideoStream(usePiCamera=args["camera"] > 0).start()
+vs = MyWebPiCam.mywebpi(1).start()#VideoStream(usePiCamera=args["camera"] > 0).start()
 time.sleep(2.0)
 
+stopped = False
+frame=None
+
 while True:
+    # threading.Thread(name="frameThread",target=getFrame(),args=vs).start()
+
     frame = vs.read()
-    frame = imutils.resize(frame,width=400)
-    
+    frame = imutils.resize(frame, width=400)
+
     gray = cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
     
     rects = detector(gray,0)
