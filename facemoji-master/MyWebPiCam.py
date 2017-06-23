@@ -1,15 +1,18 @@
 import cv2
-from imutils.video import WebcamVideoStream
+#from imutils.video import WebcamVideoStream
 from imutils.video import VideoStream
 from threading import Thread
+import time
 
-class mywebpi(WebcamVideoStream):
+class mywebpi():
     def __init__(self, src=1):
         # initialize the video camera stream and read the first frame
         # from the stream
         # making sure that piCam is the default camera
-        self.stream = VideoStream(src > 0).start()
-        (self.grabbed, self.frame) = self.stream.read()
+        self.stream = VideoStream(True).start()
+        time.sleep(2.0)
+        print "just check",self.stream.read()
+        self.frame = self.stream.read()
 
         # initialize the variable used to indicate if the thread should
         # be stopped
@@ -30,7 +33,7 @@ class mywebpi(WebcamVideoStream):
                 return
 
             # otherwise, read the next frame from the stream
-            (self.grabbed, self.frame) = self.stream.read()
+            self.frame = self.stream.read()
 
     def read(self):
         # return the frame most recently read
