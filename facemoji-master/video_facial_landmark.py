@@ -8,6 +8,7 @@ import time
 import dlib
 import cv2
 import threading
+import numpy as np
 
 ap = argparse.ArgumentParser()
 
@@ -56,6 +57,30 @@ class myclass:
 mstream = myclass().start()
 """
 
+class coordinate:
+    global numpy
+    def __init__(self):
+        print "init"
+        self.numarray = np.random.random((68,1))
+    
+    def start(self):
+        t = threading.Thread(target=self.uploadfile)
+        t.daemon = True
+        t.start()
+        return self
+    
+    def update(self,nump):
+        print "update"
+        self.numarray = nump
+    
+    def uploadfile(self):
+        print "upload"
+        print self.numarray[2]
+        return "upload"
+
+cor = coordinate().start()
+
+
 def displayupdate(cv2,frame):
     #print "display"
     frame = imutils.resize(frame, width=400)
@@ -67,9 +92,11 @@ def displayupdate(cv2,frame):
     for rect in rects:
         shape = predictor(gray,rect)
         shape = face_utils.shape_to_np(shape)
-
-        for (x,y) in shape:
-            cv2.circle(frame,(x,y),1,(0,0,255),1)
+        
+        cor.update(shape)
+        
+        #for (x,y) in shape:
+        #    cv2.circle(frame,(x,y),1,(0,0,255),1)
         
     cv2.imshow("frame",frame)
     
