@@ -1,6 +1,7 @@
 from scipy.spatial import distance as dist
 from imutils.video import VideoStream
 from imutils import face_utils
+from threading import Thread
 import numpy as np
 import argparse
 import imutils
@@ -9,10 +10,11 @@ import dlib
 import cv2
 
 EYE_AR_THRES = 0.3
-EYE_AR_CONSEC_FRAMES = 3
+EYE_AR_CONSEC_FRAMES = 10
 
 COUNTER = 0
 TOTAL = 0
+ALARM_ON = False
 
 
 def eye_aspect_ratio(eye):
@@ -66,26 +68,48 @@ while True:
         
         ear = (leftEAR + rightEAR)/2.0
         
-        leftEyeHull = cv2.convexHull(leftEye)
-        rightEyeHull = cv2.convexHull(rightEye)
+        # leftEyeHull = cv2.convexHull(leftEye)
+        # rightEyeHull = cv2.convexHull(rightEye)
         
-        cv2.drawContours(frame,[leftEyeHull],-1,(255,0,0),1)
-        cv2.drawContours(frame,[rightEyeHull],-1,(255,0,0),1)
-        
+        # cv2.drawContours(frame,[leftEyeHull],-1,(255,0,0),1)
+        # cv2.drawContours(frame,[rightEyeHull],-1,(255,0,0),1)
+        print ear
         if ear < EYE_AR_THRES:
             COUNTER +=1
+            print COUNTER
+            if COUNTER >= EYE_AR_CONSEC_FRAMES:
+                if not ALARM_ON:
+                    ALARM_ON = True
+                    """
+                    if args["alarm"] != "": 
+                        t = Thread(target=sound_alarm,args=(args["alarm"],))
+                        t.daemon = True
+                        t.start()
+                    """
+                print "Drowsiness alert"
+
+                """
+                cv2.putText(frame,"Drowsiness alert",(10,30),
+                    cv2.FONT_HERSHEY_SIMPLEX,0.7,(0,0,255),2)
+                """    
+        else:
+            COUNTER = 0
+            ALARM_ON = False
+        """
+          This logic for eyeblink
         else:
             if COUNTER >= EYE_AR_CONSEC_FRAMES:
                 TOTAL += 1
+                print "Blink {0}".format(TOTAL)
                 
             COUNTER = 0
+
+        cv2.putText(frame,"Blink: {}".format(TOTAL),(10,30),
+                cv2.FONT_HERSHEY_SIMPLEX,0.7,(0,0,255),2)
         
-    cv2.putText(frame,"Blink: {}".format(TOTAL),(10,30),
-            cv2.FONT_HERSHEY_SIMPLEX,0.7,(0,0,255),2)
-        
-    cv2.putText(frame,"EAR: {:.2f}".format(ear),(300,30),
-            cv2.FONT_HERSHEY_SIMPLEX,0.7,(0,0,255),2)
-    
+        cv2.putText(frame,"EAR: {:.2f}".format(ear),(300,30),
+                cv2.FONT_HERSHEY_SIMPLEX,0.7,(0,0,255),2)
+        """
     cv2.imshow("frame",frame)
     key = cv2.waitKey(1) & 0xFF
     

@@ -10,6 +10,7 @@ from image_commons import nparray_as_image, draw_with_alpha
 from picamera.array import PiRGBArray
 from picamera import PiCamera
 import time
+import datetime
 
 
 def _load_emoticons(emotions):
@@ -21,11 +22,15 @@ def _load_emoticons(emotions):
     return [nparray_as_image(cv2.imread('graphics/%s.png' % emotion, -1), mode=None) for emotion in emotions]
 
 def printInfo(val):
-    print(val)
+    print val
 
 def show_piCam(model, emoticons,window_size=None,window_name='PiCam', update_time=10):
     printInfo('showing pi cam')
 
+    campaign = []
+    faces = []
+    emotion = {}
+    
     camera = PiCamera()
     camera.resolution = (640, 480)
     camera.framerate=32
@@ -40,17 +45,27 @@ def show_piCam(model, emoticons,window_size=None,window_name='PiCam', update_tim
         # print('in frame for loop')
         image = frame.array
         # printInfo('frame captured')
+        count = 0
         for normalized_face, (x, y, w, h) in find_faces(image):
-            # printInfo("face found")
+            emotion={}
+            #printInfo("face found")
+            count +=1
             prediction = model.predict(normalized_face)  # do prediction
             if cv2.__version__ != '3.1.0':
                 print(prediction)
                 prediction = prediction[0]
 
-            image_to_draw = emoticons[prediction]
-            image.setflags(write=1)
-            draw_with_alpha(image, image_to_draw, (x, y, w, h))
-
+            #print "Found {0} face is {1}".format(count,emotions[prediction])
+            emotion["face"] = count
+            emotion["emotion"]=emotions[prediction]
+            emotion["timestamp"]=str(datetime.datetime.now())
+            #print emotions[prediction]
+            #image_to_draw = emoticons[prediction]
+            #image.setflags(write=1)
+            #draw_with_alpha(image, image_to_draw, (x, y, w, h))
+            faces.append(emotion)
+            
+        campaign.append(faces)
         cv2.imshow("Frame", image)
         # read_value, webcam_image = vc.read()
         image = frame.array
@@ -63,6 +78,7 @@ def show_piCam(model, emoticons,window_size=None,window_name='PiCam', update_tim
 
         # if the `q` key was pressed, break from the loop
         if key == ord("q"):
+            print faces
             break
 
 

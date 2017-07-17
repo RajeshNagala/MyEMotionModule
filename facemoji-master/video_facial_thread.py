@@ -8,7 +8,9 @@ import dlib
 import cv2
 import threading
 
-def main():
+global vs
+
+def main():    
     ap = argparse.ArgumentParser()
 
     ap.add_argument("-p","--shape-predictor", required=True,
@@ -19,13 +21,14 @@ def main():
 
     args = vars(ap.parse_args())
     print args
+    runtheshow(args)
 
 def getdetecnpredict(args):
     detector = dlib.get_frontal_face_detector()
     predictor = dlib.shape_predictor(args["shape_predictor"])
     return detector, predictor
 
-def getVideoStream():
+def getVideoStream(args):
     print "Camera is getting warming up, pls wait"
     vs = VideoStream(usePiCamera=args["camera"] > 0).start()
     time.sleep(2.0)
@@ -35,14 +38,15 @@ def detectface(gray):
     print "face detected"
     rects = detector(gray,0)
 
-def runtheshow():
+def runtheshow(args):
     while True:
+        vs = getVideoStream(args)
         frame = vs.read()
         frame = imutils.resize(frame,width=400)
     
         gray = cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
         
-        t = threading.Thread(name="detectface",Target=detectface,args=gray)
+        t = threading.Thread(name="detectface",target=detectface,args=gray)
         t.daemon=True
         t.start()
         
